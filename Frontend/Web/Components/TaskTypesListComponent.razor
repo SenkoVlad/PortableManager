@@ -1,0 +1,42 @@
+﻿@inherits ListTaskKindsViewModel
+
+<h3>ListTaskKinds</h3>
+<div class="list-group">
+    @if (TaskTypes == null || CurrentTaskType == null)
+    {
+        <div>Loading...</div>
+    }
+    else if (TaskTypes.Count == 0)
+    {
+        <div>Empty</div>
+    }
+    else
+    {
+        <ul style="padding-left: 0px !important" class="task-type-list">
+           @foreach (var taskType in TaskTypes)
+           {
+            <li href="" class="list-group-item d-flex justify-content-between list-group-item-action align-items-center @((CurrentTaskType.Name == taskType.Name)? "active" : "")" @onclick="() => setTaskTypeActive(taskType)">
+                <div class="input-group">
+                    <input type="text" class="form-control @((CurrentTaskType.Name == taskType.Name)? "input-task-type" : "")" value="@taskType.Name" @onchange="(e) => UpdateTaskTypeAsync(e, taskType)">
+                </div>
+
+                <div style="display: contents">
+                    <span class="badge badge-warning badge-pill align-items-end task-counter">@Tasks.Where(item => item.TaskTypeId == taskType.Id && !item.Status).Count()</span>
+                    <button class="btn btn-danger oi oi-droplet @((CurrentTaskType.Name == taskType.Name)? "visible" : "invisible")" type="button" @onclick="() => DeleteTaskTypeAsync(taskType)"></button>
+                </div>
+            </li>
+            }
+        </ul>
+    }
+</div>
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Input type of task" aria-label="Input type of task" aria-describedby="basic-addon2" @bind-value="inputTaskType">
+    <div class="input-group-append">
+        <button class="btn btn-outline-success" type="button" @onclick="() => AddNewTaskTypeAsync()">Add</button>
+    </div>
+</div>
+
+
+
+

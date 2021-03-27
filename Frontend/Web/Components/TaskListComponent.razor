@@ -1,0 +1,68 @@
+﻿@inherits TaskListViewModel
+<h3>@(TaskType != null ? TaskType.Name : "Loading task name..." )</h3>
+
+
+@if (ListTaskKindsViewModel.Tasks == null || TaskType == null)
+{
+    <div>Loading tasks...</div>
+}
+else if (ListTaskKindsViewModel.Tasks.Count == 0)
+{
+    <div>Task list is empty</div>
+}
+else
+{
+<div class="task-list">
+
+  
+   @foreach (var task in ListTaskKindsViewModel.Tasks.Where(item => item?.TaskTypeId == TaskType.Id))
+    {
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    @if (task.Status)
+                    {
+                        <input type="checkbox" checked aria-label="Checkbox for following text input" @onchange="(e) => UpdateTaskStatusAsync(task, e)">
+                    }
+                    else
+                    {
+                        <input type="checkbox" aria-label="Checkbox for following text input" @onchange="(e) => UpdateTaskStatusAsync(task, e)">
+                    }
+                </div>
+            </div>
+            @if (task.Status)
+            {
+                <input type="text" class="form-control" value="@task.Text" aria-label="Recipient's username" aria-describedby="basic-addon2" disabled>
+            }
+            else
+            {
+                <input type="text" class="form-control" value="@task.Text" @onchange="(e) => UpdateTaskTextAsync(task, e)" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            }
+            <div class="input-group-append">
+                <button class="btn btn-outline-warning dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Move</button>
+                @if (TaskTypesListComponent.TaskTypes != null && TaskTypesListComponent.TaskTypes.Count > 0)
+                {
+                    <div class="dropdown-menu task-type-list">
+                        @foreach (var taskType in TaskTypesListComponent.TaskTypes)
+                        {
+                            <a class="dropdown-item" @onclick="() => MoveTaskAsync(taskType, task)">@taskType.Name</a>
+                        }
+                    </div>
+                }
+
+                <button class="btn btn-outline-danger" type="button" @onclick="() => RemoveTaskAsync(task)">Remove</button>
+            </div>
+        </div>
+    }
+</div>
+}
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control" @bind="InputTask" placeholder="Input type of task" aria-label="Input new task" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+        <button class="btn btn-outline-success" type="button" @onclick="() => AddTaskAsync()">Add</button>
+    </div>
+</div>
+
+
+

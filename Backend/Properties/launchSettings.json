@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "PortableManager.Web.Server": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false,
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+      "applicationUrl": "https://localhost:10001;http://localhost:10000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

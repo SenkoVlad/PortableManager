@@ -1,0 +1,88 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+a, .btn-link {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.task-counter {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.input-task-type, .input-task-type:focus {
+    background-color: #007bff;
+    border-color: white;
+    color: white;
+}
+
+.task-type-list {
+    height: auto;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.task-list {
+    max-height: 80vh;
+    height: auto;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    margin-left: 2px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px #495057;
+    border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 7px;
+}

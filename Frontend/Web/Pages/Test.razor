@@ -1,0 +1,82 @@
+﻿@page "/test"
+@inject HttpClient Http
+
+<h1>Test</h1>
+<div class="row">
+    <button class="btn btn-outline-primary mr-3" @onclick="() => LoadTaskTypeAsync()">Load</button>
+    <button class="btn btn-outline-primary mr-3" @onclick="() => AddTaskTypeAsync()">Add test record (TaskType)</button>
+    <button class="btn btn-outline-primary mr-3" @onclick="() => DeleteTaskTypeAsync()">Delete test record (TaskType)</button>
+    <button class="btn btn-outline-primary mr-3" @onclick="() => UpdateTaskTypeAsync()">Update test record (TaskType)</button>
+</div>
+
+<div class="row">
+    <button class="btn btn-outline-primary mr-3" @onclick="() => LoadTasksAsync()">Load tasks</button>
+    <button class="btn btn-outline-primary mr-3" @onclick="() => UpdateTaskAsync()">Update task</button>
+    <button class="btn btn-outline-primary mr-3" @onclick="() => DeleteTaskAsync()">Delete task</button>
+    <button class="btn btn-outline-primary mr-3" @onclick="() => AddTaskAsync()">Add task</button>
+</div>
+
+@if (taskTypes != null)
+{
+    foreach (var taskType in taskTypes)
+    {
+    <div class="row">
+        <div class="col">@taskType.Key.Name</div>
+        <div class="col">@taskType.Value</div>
+    </div>
+    }
+}
+
+@if (tasks != null)
+{
+    foreach (var task in tasks)
+    {
+    <div class="row">
+        <div class="col">@task.Text</div>
+        <div class="col">@task.Status</div>
+    </div>
+    }
+}
+
+@code {
+    private Dictionary<TaskType, int> taskTypes;
+    private Models.Task[] tasks;
+
+    private async System.Threading.Tasks.Task LoadTaskTypeAsync()
+    {
+        taskTypes = await Http.GetFromJsonAsync<Dictionary<TaskType, int>>("task/get/tasktypes");
+    }
+    private async System.Threading.Tasks.Task AddTaskTypeAsync()
+    {
+        var response = await Http.PostAsJsonAsync("task/add/tasktype", new TaskType() { Name = "htrjtytr3" });
+    }
+    private async System.Threading.Tasks.Task DeleteTaskTypeAsync()
+    {
+        var response = await Http.PostAsJsonAsync("task/delete/tasktype", new TaskType() { Name = "htrjtytr3" });
+    }
+    private async System.Threading.Tasks.Task UpdateTaskTypeAsync()
+    {
+        var response = await Http.PostAsJsonAsync("task/update/tasktype", new TaskType() { Id = taskTypes.First().Key.Id, Name = "newNAME!!!!" });
+    }
+
+
+    private async System.Threading.Tasks.Task LoadTasksAsync()
+    {
+        tasks = await Http.GetFromJsonAsync<Models.Task[]>("task/get/tasks");
+    }
+    private async System.Threading.Tasks.Task DeleteTaskAsync()
+    {
+        var response = await Http.PostAsJsonAsync("task/delete/task", tasks.First());
+    }
+    private async System.Threading.Tasks.Task UpdateTaskAsync()
+    {
+        var taskForUpdate = tasks.First();
+        taskForUpdate.Text = "NEW TASK TEXT";
+
+        var response = await Http.PostAsJsonAsync("task/update/task", taskForUpdate);
+    }
+    private async System.Threading.Tasks.Task AddTaskAsync()
+    {
+        var response = await Http.PostAsJsonAsync("task/add/task", new Models.Task() { Text = "First task " + (new Random()).Next(100).ToString(), Status = false, TaskTypeId = 20 });
+    }
+}
