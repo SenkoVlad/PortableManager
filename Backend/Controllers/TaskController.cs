@@ -84,10 +84,9 @@ namespace PortableManager.Web.Server.Controllers
         }
 
         [HttpPost("update/tasktype")]
-        public async Task<ActionResult<TaskType>> UpdateTaskType(TaskType taskType)
+        public async Task<int> UpdateTaskType(TaskType taskType)
         {
-            await _taskTypeService.UpdateTaskTypeAsync(taskType);
-            return Ok();
+            return await _taskTypeService.UpdateTaskTypeAsync(taskType);
         }
     }
 }

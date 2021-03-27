@@ -84,7 +84,7 @@ namespace PortableManager.Web.Server.Data.Repositories.Implementation
             }
         }
 
-        public async Task UpdateTaskTypeAsync(TaskType taskType)
+        public async Task<int> UpdateTaskTypeAsync(TaskType taskType)
         {
             if(taskType != null && !string.IsNullOrWhiteSpace(taskType.Name))
             {
@@ -95,9 +95,11 @@ namespace PortableManager.Web.Server.Data.Repositories.Implementation
                 {
                     taskTypeForUpdate.Name = taskType.Name;
                     Context.Entry(taskTypeForUpdate).State = EntityState.Modified;
-                    await Context.SaveChangesAsync();
+                    return await Context.SaveChangesAsync();
                 }
             }
+
+            return await Task.FromResult(0);
         }
     }
 }

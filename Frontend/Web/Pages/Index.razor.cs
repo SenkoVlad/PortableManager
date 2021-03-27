@@ -13,5 +13,7 @@ namespace PortableManager.Web.Client.Pages
     {
         [Parameter] public TaskType CurrentTaskType { get; set; }
         [Parameter] public bool RerenderTaskTypes { get; set; }
+        [Parameter] public List<Models.Task> Tasks { get; set; }
+        [Parameter] public List<TaskType> TaskTypes { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace PortableManager.Web.Server.Data.Repositories.Interface
         Task<TaskType> GetTaskTypeByNameAsync(string name);
         Task<TaskType> AddTaskTypeAsync(TaskType taskType);
         Task DeleteTaskTypeAsync(TaskType taskType);
-        Task UpdateTaskTypeAsync(TaskType taskType);
+        Task<int> UpdateTaskTypeAsync(TaskType taskType);
     }
 }

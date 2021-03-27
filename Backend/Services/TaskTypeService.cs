@@ -37,9 +37,9 @@ namespace PortableManager.Web.Server.Servicies
             await _taskTypeRepository.DeleteTaskTypeAsync(taskType);
         }
 
-        public async System.Threading.Tasks.Task UpdateTaskTypeAsync(TaskType taskType)
+        public async System.Threading.Tasks.Task<int> UpdateTaskTypeAsync(TaskType taskType)
         {
-            await _taskTypeRepository.UpdateTaskTypeAsync(taskType);
+            return await _taskTypeRepository.UpdateTaskTypeAsync(taskType);
         }
     }
 }
