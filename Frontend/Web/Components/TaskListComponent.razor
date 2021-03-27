@@ -2,11 +2,11 @@
 <h3>@(TaskType != null ? TaskType.Name : "Loading task name..." )</h3>
 
 
-@if (ListTaskKindsViewModel.Tasks == null || TaskType == null)
+@if (Tasks == null || TaskType == null)
 {
     <div>Loading tasks...</div>
 }
-else if (ListTaskKindsViewModel.Tasks.Count == 0)
+else if (Tasks.Count == 0)
 {
     <div>Task list is empty</div>
 }
@@ -15,7 +15,7 @@ else
 <div class="task-list">
 
   
-   @foreach (var task in ListTaskKindsViewModel.Tasks.Where(item => item?.TaskTypeId == TaskType.Id))
+   @foreach (var task in Tasks.Where(item => item?.TaskTypeId == TaskType.Id))
     {
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -40,10 +40,10 @@ else
             }
             <div class="input-group-append">
                 <button class="btn btn-outline-warning dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Move</button>
-                @if (TaskTypesListComponent.TaskTypes != null && TaskTypesListComponent.TaskTypes.Count > 0)
+                @if (TaskTypes != null && TaskTypes.Count > 0)
                 {
                     <div class="dropdown-menu task-type-list">
-                        @foreach (var taskType in TaskTypesListComponent.TaskTypes)
+                        @foreach (var taskType in TaskTypes)
                         {
                             <a class="dropdown-item" @onclick="() => MoveTaskAsync(taskType, task)">@taskType.Name</a>
                         }

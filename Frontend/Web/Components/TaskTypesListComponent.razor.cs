@@ -16,9 +16,11 @@ namespace PortableManager.Web.Client.Components
     public class ListTaskKindsViewModel : ComponentBase
     {
         [Inject] HttpClient Http { get; set; }
-        public static List<TaskType> TaskTypes { get; set; } = new List<TaskType>();
-        public static List<Models.Task> Tasks { get; set; } = new List<Models.Task>();
+       
+        [Parameter] public List<TaskType> TaskTypes { get; set; }
+        [Parameter] public EventCallback<List<TaskType>> TaskTypesChanged { get; set; }
 
+        [Parameter] public List<Models.Task> Tasks { get; set; }
         [Parameter] public bool Rerender
         { 
             get
@@ -46,7 +48,7 @@ namespace PortableManager.Web.Client.Components
             Console.WriteLine("ListTaskKindsViewModel OnInitializedAsync");
 
             TaskTypes = (await Http.GetFromJsonAsync<List<TaskType>>( "task/get/tasktypes")).ToList();
-            Tasks = (await Http.GetFromJsonAsync<Models.Task[]>("task/get/tasks")).ToList();
+            await TaskTypesChanged.InvokeAsync(TaskTypes);
 
             if(TaskTypes.Count > 0)
             {
@@ -66,7 +68,8 @@ namespace PortableManager.Web.Client.Components
                 newTaskType = await GetTaskTypeFromHttpResponse(response);
                 
                 TaskTypes.Add(newTaskType);
-                
+                await TaskTypesChanged.InvokeAsync(TaskTypes);
+
                 CurrentTaskType = newTaskType;
                 await CurrentTaskTypeChanged.InvokeAsync(CurrentTaskType);
                 inputTaskType = "";
@@ -78,6 +81,7 @@ namespace PortableManager.Web.Client.Components
         {
             await Http.PostAsJsonAsync( "task/delete/tasktype", taskType );
             TaskTypes.Remove(taskType);
+            await TaskTypesChanged.InvokeAsync(TaskTypes);
 
             CurrentTaskType = TaskTypes.First();
             await CurrentTaskTypeChanged.InvokeAsync(CurrentTaskType);
@@ -85,8 +89,20 @@ namespace PortableManager.Web.Client.Components
 
         public async Task UpdateTaskTypeAsync(ChangeEventArgs eventArgs,TaskType taskType)
         {
+            var oldTaskTypeIndex = TaskTypes.IndexOf(taskType);
+
             taskType.Name = (string)eventArgs.Value;
-            await Http.PostAsJsonAsync( "task/update/tasktype", taskType);
+            var responseMessage = await Http.PostAsJsonAsync( "task/update/tasktype", taskType);
+
+            var responseBytes = await responseMessage.Content.ReadAsByteArrayAsync();
+            var response = Encoding.UTF8.GetString(responseBytes);
+
+            if (response == "1")
+            {
+                TaskTypes[oldTaskTypeIndex] = taskType;
+                await TaskTypesChanged.InvokeAsync(TaskTypes);
+            }
+
         }
 
         private async  Task<TaskType> GetTaskTypeFromHttpResponse(HttpResponseMessage responseMessage)

@@ -18,20 +18,27 @@ namespace PortableManager.Web.Client.Components
         [Parameter] public TaskType TaskType { get; set; }
         [Parameter] public bool RerenderTaskTypesList { get; set; }
         [Parameter] public EventCallback<bool> RerenderTaskTypesListChanged { get; set; }
-        
+
+
+        [Parameter] public List<Models.TaskType> TaskTypes { get; set; }
+        [Parameter] public List<Models.Task> Tasks { get; set; }
+        [Parameter] public EventCallback<List<Models.Task>> TasksChanged { get; set; }
+
 
         public string InputTask { get; set; }
 
-        private int GetTaskIndexFromList(Models.Task task)
+        protected async override Task OnInitializedAsync()
         {
-            return ListTaskKindsViewModel.Tasks.FindIndex(item => item.Id == task.Id);
+            Tasks = (await Http.GetFromJsonAsync<List<Models.Task>>("task/get/tasks")).ToList();
+            await TasksChanged.InvokeAsync(Tasks);
         }
 
         public async void UpdateTaskStatusAsync(Models.Task task, ChangeEventArgs eventArgs) 
         {
             task.Status = (bool)eventArgs.Value;
-            ListTaskKindsViewModel.Tasks[GetTaskIndexFromList(task)].Status = (bool)eventArgs.Value;
-            
+            Tasks[GetTaskIndexFromList(task)].Status = (bool)eventArgs.Value;
+            await TasksChanged.InvokeAsync(Tasks);
+
             RerenderTaskTypesList = true;
             await RerenderTaskTypesListChanged.InvokeAsync(RerenderTaskTypesList);
             await Http.PostAsJsonAsync( "task/update/task", task);
@@ -46,8 +53,9 @@ namespace PortableManager.Web.Client.Components
         public async Task MoveTaskAsync(TaskType taskType, Models.Task task)
         {
             task.TaskTypeId = taskType.Id;
-            ListTaskKindsViewModel.Tasks[GetTaskIndexFromList(task)].Id = taskType.Id;
-            
+            Tasks[GetTaskIndexFromList(task)].Id = taskType.Id;
+            await TasksChanged.InvokeAsync(Tasks);
+
             RerenderTaskTypesList = true;
             await RerenderTaskTypesListChanged.InvokeAsync(RerenderTaskTypesList);
             await Http.PostAsJsonAsync("task/update/task", task);
@@ -55,8 +63,9 @@ namespace PortableManager.Web.Client.Components
 
         public async Task RemoveTaskAsync(Models.Task task)
         {
-            ListTaskKindsViewModel.Tasks.RemoveAt(GetTaskIndexFromList(task));
-            
+            Tasks.RemoveAt(GetTaskIndexFromList(task));
+            await TasksChanged.InvokeAsync(Tasks);
+
             RerenderTaskTypesList = true;
             await RerenderTaskTypesListChanged.InvokeAsync(RerenderTaskTypesList);
             await Http.PostAsJsonAsync("task/delete/task", task);
@@ -76,7 +85,8 @@ namespace PortableManager.Web.Client.Components
 
                 if ((await GetTaskFromHttpResponse(resultPostTask)).Id != 0) 
                 { 
-                    ListTaskKindsViewModel.Tasks.Add(task);
+                    Tasks.Add(task);
+                    await TasksChanged.InvokeAsync(Tasks);
                 }
 
                 RerenderTaskTypesList = true;
@@ -95,5 +105,10 @@ namespace PortableManager.Web.Client.Components
 
             return JsonSerializer.Deserialize<Models.Task>(responseString, a);
         }
+        private int GetTaskIndexFromList(Models.Task task)
+        {
+            return Tasks.FindIndex(item => item.Id == task.Id);
+        }
+
     }
 }
