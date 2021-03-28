@@ -45,8 +45,6 @@ namespace PortableManager.Web.Client.Components
         }
         protected override async Task OnInitializedAsync()
         {
-            Console.WriteLine("ListTaskKindsViewModel OnInitializedAsync");
-
             TaskTypes = (await Http.GetFromJsonAsync<List<TaskType>>( "task/get/tasktypes")).ToList();
             await TaskTypesChanged.InvokeAsync(TaskTypes);
 

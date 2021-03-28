@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortableManager.Web.Server"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortableManager.Web.Client", "Frontend\Web\PortableManager.Web.Client.csproj", "{DC81DF98-241C-414A-B303-47939B2D9A27}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{D9C53257-3D77-4D71-A33A-D8AA1B01C832}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortableManager.Shared", "PortableManager.Shared\PortableManager.Shared.csproj", "{4FBCD1B5-2E24-4271-A0B8-C3EADF125632}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,10 @@ Global
 		{DC81DF98-241C-414A-B303-47939B2D9A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC81DF98-241C-414A-B303-47939B2D9A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC81DF98-241C-414A-B303-47939B2D9A27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FBCD1B5-2E24-4271-A0B8-C3EADF125632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FBCD1B5-2E24-4271-A0B8-C3EADF125632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FBCD1B5-2E24-4271-A0B8-C3EADF125632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FBCD1B5-2E24-4271-A0B8-C3EADF125632}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,6 +43,7 @@ Global
 		{FAEF6963-1B1B-49A3-937C-EE982C243C99} = {02B1C918-1C25-4DA6-8F8F-FF7611FF5C25}
 		{3C7A7856-467C-4559-96FF-A881EFC9BCE4} = {D14909C0-16AB-4ABB-91B5-C2EE0D65BDDC}
 		{DC81DF98-241C-414A-B303-47939B2D9A27} = {FAEF6963-1B1B-49A3-937C-EE982C243C99}
+		{4FBCD1B5-2E24-4271-A0B8-C3EADF125632} = {D9C53257-3D77-4D71-A33A-D8AA1B01C832}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EACEFF41-E189-4130-934D-115C55AE2615}

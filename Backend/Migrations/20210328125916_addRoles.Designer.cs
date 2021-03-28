@@ -10,8 +10,8 @@ using PortableManager.Web.Server.Data;
 namespace PortableManager.Web.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210324192614_add_identity")]
-    partial class add_identity
+    [Migration("20210328125916_addRoles")]
+    partial class addRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,6 +46,22 @@ namespace PortableManager.Web.Server.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4ebe7abc-54c5-4bf9-ac0b-7f7def2fe2a4",
+                            ConcurrencyStamp = "6e6df423-f463-488e-99e3-b042fe4b2a7a",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "0007f4df-8861-4993-bcd6-6f9ddb4be848",
+                            ConcurrencyStamp = "9a9fa689-2f5f-42e2-ae0a-4ed0f572ed3e",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -164,10 +180,12 @@ namespace PortableManager.Web.Server.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -204,10 +222,12 @@ namespace PortableManager.Web.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");

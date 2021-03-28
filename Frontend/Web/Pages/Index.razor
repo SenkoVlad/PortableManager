@@ -1,12 +1,18 @@
 ﻿@page "/"
 @inherits IndexModel
 
-<div class="row">
-    <div class="col-12 col-md-6 col-lg-4 justify-content-start">
-        <TaskTypesListComponent @bind-CurrentTaskType="CurrentTaskType" Rerender="@RerenderTaskTypes" @bind-TaskTypes="TaskTypes" Tasks="Tasks"/>
-    </div>
-    <div class="col-12 col-md-6 col-lg-8 justify-content-start">
-        <TaskListComponent TaskType="@CurrentTaskType" @bind-RerenderTaskTypesList="RerenderTaskTypes" @bind-Tasks="Tasks" TaskTypes="TaskTypes"/>
-    </div>
-</div>
-
+<AuthorizeView>
+    <Authorized>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 justify-content-start">
+                <TaskTypesListComponent @bind-CurrentTaskType="CurrentTaskType" Rerender="@RerenderTaskTypes" @bind-TaskTypes="TaskTypes" Tasks="Tasks" />
+            </div>
+            <div class="col-12 col-md-6 col-lg-8 justify-content-start">
+                <TaskListComponent TaskType="@CurrentTaskType" @bind-RerenderTaskTypesList="RerenderTaskTypes" @bind-Tasks="Tasks" TaskTypes="TaskTypes" />
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Login />
+    </NotAuthorized>
+</AuthorizeView>
