@@ -27,7 +27,9 @@ namespace PortableManager.Web.Server.Data
                 ServiceLifetime.Transient);
 
             services.AddDefaultIdentity<IdentityUser>()
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>();
+                    
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

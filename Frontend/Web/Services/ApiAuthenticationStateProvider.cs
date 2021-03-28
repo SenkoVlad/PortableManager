@@ -32,9 +32,9 @@ namespace PortableManager.Web.Client
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(savedToken), "jwt")));
         }
 
-        public void MarkUserAsAuthenticated(string email)
+        public void MarkUserAsAuthenticated(string token)
         {
-            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }, "apiauth"));
+            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt")));
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
             NotifyAuthenticationStateChanged(authState);
         }
@@ -73,6 +73,12 @@ namespace PortableManager.Web.Client
 
                 keyValuePairs.Remove(ClaimTypes.Role);
             }
+
+            foreach (var key in keyValuePairs.Keys)
+            {
+                Console.WriteLine($"{key} : {keyValuePairs[key]}");
+            }
+
             claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
 
             return claims;

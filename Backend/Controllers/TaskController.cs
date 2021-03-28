@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using PortableManager.Web.Server.Models;
-using PortableManager.Web.Server.Models.Dto;
 using PortableManager.Web.Server.Servicies;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PortableManager.Web.Server.Controllers
@@ -44,6 +40,7 @@ namespace PortableManager.Web.Server.Controllers
             await _taskService.UpdateTaskAsync(task);
             return Ok();
         }
+        
         [HttpPost("add/task")]
         public async Task<Models.Task> PostTask(Models.Task task)
         {

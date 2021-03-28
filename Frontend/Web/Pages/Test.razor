@@ -1,5 +1,6 @@
 ﻿@page "/test"
 @inject HttpClient Http
+@attribute [Authorize(Roles = "Admin")]
 
 <h1>Test</h1>
 <div class="row">
@@ -20,10 +21,10 @@
 {
     foreach (var taskType in taskTypes)
     {
-    <div class="row">
-        <div class="col">@taskType.Key.Name</div>
-        <div class="col">@taskType.Value</div>
-    </div>
+        <div class="row">
+            <div class="col">@taskType.Key.Name</div>
+            <div class="col">@taskType.Value</div>
+        </div>
     }
 }
 
@@ -31,10 +32,10 @@
 {
     foreach (var task in tasks)
     {
-    <div class="row">
-        <div class="col">@task.Text</div>
-        <div class="col">@task.Status</div>
-    </div>
+        <div class="row">
+            <div class="col">@task.Text</div>
+            <div class="col">@task.Status</div>
+        </div>
     }
 }
 
