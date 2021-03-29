@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PortableManager.Web.Server.Models;
 using PortableManager.Web.Server.Models.Dto;
 using System;
 
 namespace PortableManager.Web.Server.Data
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         public DbSet<TaskDto> Tasks { get; set; }
         public DbSet<TaskTypeDto> TaskTypes { get; set; }

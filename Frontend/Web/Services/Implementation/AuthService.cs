@@ -55,7 +55,7 @@ namespace PortableManager.Web.Client.Services
         {
             var response = await _httpClient.PostAsJsonAsync<RegisterModel>("accounts", registerModel);
             var registerResult = JsonSerializer.Deserialize<RegisterResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
+                
             return registerResult;
         }
     }

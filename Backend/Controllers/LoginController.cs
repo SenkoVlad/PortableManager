@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PortableManager.Shared;
+using PortableManager.Web.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,12 +19,14 @@ namespace PortableManager.Web.Server.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public LoginController(IConfiguration configuration, SignInManager<IdentityUser> signInManager)
+        public LoginController(IConfiguration configuration, SignInManager<User> signInManager, UserManager<User> userManager)
         {
             _configuration = configuration;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -33,6 +36,11 @@ namespace PortableManager.Web.Server.Controllers
             if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
 
             var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return BadRequest(new LoginResult { Successful = false, Error = "Email isn't confirmated" });
+            }
+
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
             var claims = new List<Claim>();

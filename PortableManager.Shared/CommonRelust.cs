@@ -4,10 +4,9 @@ using System.Text;
 
 namespace PortableManager.Shared
 {
-    public class RegisterResult
+    public class CommonRelust
     {
         public bool Successful { get; set; }
-        public IEnumerable<string> Errors { get; set; }
         public IEnumerable<string> Messages { get; set; }
     }
 }
