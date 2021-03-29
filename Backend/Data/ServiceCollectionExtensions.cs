@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PortableManager.Web.Server.Data.Repositories.Implementation;
 using PortableManager.Web.Server.Data.Repositories.Interface;
+using PortableManager.Web.Server.Models;
 using PortableManager.Web.Server.Servicies;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,8 @@ namespace PortableManager.Web.Server.Data
                 },
                 ServiceLifetime.Transient);
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<User>()
+                    .AddDefaultTokenProviders()
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>();
                     
