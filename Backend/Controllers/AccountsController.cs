@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PortableManager.Shared;
+using PortableManager.Shared.Models;
 using PortableManager.Web.Server.Models;
 using PortableManager.Web.Server.Services;
 using System;
@@ -84,5 +85,65 @@ namespace PortableManager.Web.Server.Controllers
                 return BadRequest(new CommonRelust { Successful = false, Messages = errors });
             }
         }
+
+        [HttpGet("forgotpassword")]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return Ok(new ForgotPasswordResult { ShowForm = true });
+        }
+
+        [HttpPost("forgotpassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                return Ok(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Пользователь с таким email не существует" } });
+
+            if (!(await _userManager.IsEmailConfirmedAsync(user)))
+                return Ok(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Email не подтвержден" } });
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.ActionLink("ResetPassword", "Accounts", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+            EmailService emailService = new EmailService();
+            await emailService.SendEmailAsync(model.Email, "Reset Password",
+                $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>Reset password</a>");
+            return Ok(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Ссылка для сброса пароля отправлена на email" } });
+        }
+
+        [HttpGet("ResetPassword")]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string userId, string code)
+        {
+            return Ok();
+        }
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+        //    var user = await _userManager.FindByEmailAsync(model.Email);
+        //    if (user == null)
+        //    {
+        //        return View("ResetPasswordConfirmation");
+        //    }
+        //    var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+        //    if (result.Succeeded)
+        //    {
+        //        return View("ResetPasswordConfirmation");
+        //    }
+        //    foreach (var error in result.Errors)
+        //    {
+        //        ModelState.AddModelError(string.Empty, error.Description);
+        //    }
+        //    return View(model);
+        //}
     }
 }
