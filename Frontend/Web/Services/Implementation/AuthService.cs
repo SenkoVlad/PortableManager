@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using PortableManager.Shared;
+using PortableManager.Shared.Models;
 using PortableManager.Web.Client.Infrastructure;
 using System;
 using System.Net.Http;
@@ -57,6 +58,26 @@ namespace PortableManager.Web.Client.Services
             var registerResult = JsonSerializer.Deserialize<RegisterResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 
             return registerResult;
+        }
+
+        public async Task<ForgotPasswordResult> ForgotPasswordAsync(ForgotPasswordModel forgotPasswordModel)
+        {
+            if (string.IsNullOrWhiteSpace(forgotPasswordModel.Email))
+            {
+                var response = await _httpClient.GetAsync("accounts/forgotpassword");
+                return JsonSerializer.Deserialize<ForgotPasswordResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else
+            {
+                var response = await _httpClient.PostAsJsonAsync<ForgotPasswordModel>("accounts/forgotpassword", forgotPasswordModel);
+                return JsonSerializer.Deserialize<ForgotPasswordResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+        }
+
+        public async Task<ResetPasswordResult> ResetPasswordAsync(ResetPasswordModel resetPasswordModel)
+        {
+            var response = await _httpClient.PostAsJsonAsync<ResetPasswordModel>("accounts/resetpassword", resetPasswordModel);
+            return JsonSerializer.Deserialize<ResetPasswordResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }
