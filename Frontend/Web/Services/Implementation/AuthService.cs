@@ -74,5 +74,10 @@ namespace PortableManager.Web.Client.Services
             }
         }
 
+        public async Task<ResetPasswordResult> ResetPasswordAsync(ResetPasswordModel resetPasswordModel)
+        {
+            var response = await _httpClient.PostAsJsonAsync<ResetPasswordModel>("accounts/resetpassword", resetPasswordModel);
+            return JsonSerializer.Deserialize<ResetPasswordResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
     }
 }

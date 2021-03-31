@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PortableManager.Web.Server.Models;
 using PortableManager.Web.Server.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using PortableManager.Shared.Models;
 using System.Threading.Tasks;
 
 namespace PortableManager.Web.Server.Controllers
@@ -29,7 +27,7 @@ namespace PortableManager.Web.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +57,7 @@ namespace PortableManager.Web.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +68,7 @@ namespace PortableManager.Web.Server.Controllers
             {
                 return View("ResetPasswordConfirmation");
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
             if (result.Succeeded)
             {
                 return View("ResetPasswordConfirmation");
