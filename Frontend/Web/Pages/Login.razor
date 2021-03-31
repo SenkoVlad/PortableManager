@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@inject IAuthService AuthService
+@inject IAuthService _authService
 @inject NavigationManager NavigationManager
 
 <h1>Login</h1>
@@ -26,24 +26,63 @@
     </div>
 </div>
 
-@if (ShowErrors)
+@if(Messages != null)
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@Error</p>
-    </div>
+<div class="alert alert-primary" role="alert">
+    @foreach (var message in Messages)
+    {
+        <p>@message</p>
+    }
+</div>
 }
 
 @code {
 
     private LoginModel loginModel = new LoginModel();
-    private bool ShowErrors;
-    private string Error = "";
+    private ConfirmEmailModel confirmEmailModel = new ConfirmEmailModel();
+    private ConfirmEmailResult confirmEmailResult = new ConfirmEmailResult();
+
+    private IEnumerable<string> Messages;
+
+    protected async override System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        StringValues userIdParam;
+        StringValues tokenParam;
+        StringValues emailParam;
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("userId", out userIdParam))
+            confirmEmailModel.UserId = Convert.ToString(userIdParam);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("token", out tokenParam))
+            confirmEmailModel.Token = Convert.ToString(tokenParam).Replace(" ", "+");
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("email", out emailParam))
+            confirmEmailModel.Email = Convert.ToString(emailParam);
+
+        if (IsConfirmModelValid())
+        {
+            confirmEmailResult = await _authService.ConfirmateEmailAsync(confirmEmailModel);
+            Messages = confirmEmailResult.Messages;
+
+            if(confirmEmailResult.Status == true)
+            {
+                loginModel.Email = confirmEmailModel.Email;
+            }
+        }
+    }
+
+    private bool IsConfirmModelValid()
+    {
+        return !string.IsNullOrWhiteSpace(confirmEmailModel.Email) &&
+               !string.IsNullOrWhiteSpace(confirmEmailModel.Token) &&
+               !string.IsNullOrWhiteSpace(confirmEmailModel.UserId);
+    }
 
     private async System.Threading.Tasks.Task HandleLogin()
     {
-        ShowErrors = false;
 
-        var result = await AuthService.LoginAsync(loginModel);
+        var result = await _authService.LoginAsync(loginModel);
 
         if (result.Successful)
         {
@@ -51,9 +90,7 @@
         }
         else
         {
-            Error = result.Error;
-            ShowErrors = true;
+            Messages = new string[] { result.Error };
         }
     }
-
 }

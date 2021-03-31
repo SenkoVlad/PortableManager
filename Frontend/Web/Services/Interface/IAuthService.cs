@@ -11,6 +11,6 @@ namespace PortableManager.Web.Client.Services
         public Task LogoutAsync();
         public Task<ForgotPasswordResult> ForgotPasswordAsync(ForgotPasswordModel forgotPasswordModel);
         public Task<ResetPasswordResult> ResetPasswordAsync(ResetPasswordModel resetPasswordModel);
-        
+        public Task<ConfirmEmailResult> ConfirmateEmailAsync(ConfirmEmailModel confirmEmailModel);   
     }
 }

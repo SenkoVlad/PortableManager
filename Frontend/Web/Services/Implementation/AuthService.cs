@@ -54,7 +54,7 @@ namespace PortableManager.Web.Client.Services
 
         public async Task<RegisterResult> RegisterAsync(RegisterModel registerModel)
         {
-            var response = await _httpClient.PostAsJsonAsync<RegisterModel>("accounts", registerModel);
+            var response = await _httpClient.PostAsJsonAsync<RegisterModel>("accounts/register", registerModel);
             var registerResult = JsonSerializer.Deserialize<RegisterResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 
             return registerResult;
@@ -78,6 +78,12 @@ namespace PortableManager.Web.Client.Services
         {
             var response = await _httpClient.PostAsJsonAsync<ResetPasswordModel>("accounts/resetpassword", resetPasswordModel);
             return JsonSerializer.Deserialize<ResetPasswordResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<ConfirmEmailResult> ConfirmateEmailAsync(ConfirmEmailModel confirmEmailModel)
+        {
+            var response = await _httpClient.PostAsJsonAsync<ConfirmEmailModel>("accounts/confirmate/email", confirmEmailModel);
+            return JsonSerializer.Deserialize<ConfirmEmailResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }

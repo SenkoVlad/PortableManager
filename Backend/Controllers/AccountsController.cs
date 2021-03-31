@@ -24,8 +24,8 @@ namespace PortableManager.Web.Server.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RegisterModel model)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var newUser = new User { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(newUser, model.Password);
@@ -40,12 +40,8 @@ namespace PortableManager.Web.Server.Controllers
             if (model.Email.StartsWith("admin"))
                 await _userManager.AddToRoleAsync(newUser, "Admin");
 
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = Url.Action(
-                "ConfirmEmail",
-                "Accounts",
-                new { userId = newUser.Id, code = code },
-                protocol: HttpContext.Request.Scheme);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            var callbackUrl = $"https://localhost:5001/login?userId={newUser.Id}&token={token}&email={newUser.Email}";
 
             EmailService emailService = new EmailService();
             await emailService.SendEmailAsync(model.Email, "Confirm your account",
@@ -65,24 +61,24 @@ namespace PortableManager.Web.Server.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost("confirmate/email")]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailModel confirmEmailModel)
         {
-            if (userId == null || code == null)
-                return BadRequest(new CommonRelust { Successful = false, Messages = new string[] { $"userId == {userId} || code == {code}" } });
+            if (confirmEmailModel.UserId == null || confirmEmailModel.Token == null)
+                return BadRequest(new ConfirmEmailResult { Status = false, Messages = new string[] { "Неверный token или пользователь" } });
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(confirmEmailModel.UserId); 
             if (user == null)
-                return BadRequest(new CommonRelust { Successful = false, Messages = new string[] { $"userId == {userId} doesn't exists" } });
+                return BadRequest(new ConfirmEmailResult { Status = false, Messages = new string[] { "Пользователь не найден" } });
 
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+            var result = await _userManager.ConfirmEmailAsync(user, confirmEmailModel.Token);
             if (result.Succeeded)
-                return Ok(new CommonRelust { Successful = true, Messages = new string[] { $"userId == {userId} is confirmated" } });
+                return Ok(new ConfirmEmailResult { Status = true, Messages = new string[] { "Email подтверждён" } });
             else
             {
                 var errors = result.Errors.Select(x => x.Description);
-                return BadRequest(new CommonRelust { Successful = false, Messages = errors });
+                return BadRequest(new ConfirmEmailResult { Status = false, Messages = errors });
             }
         }
 

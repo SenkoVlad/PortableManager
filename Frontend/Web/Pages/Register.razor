@@ -4,7 +4,7 @@
 
 <h1>Register</h1>
 
-@if (ShowErrors)
+@if (Errors != null)
 {
     <div class="alert alert-danger" role="alert">
         @foreach (var error in Errors)
@@ -32,8 +32,8 @@
                 <ValidationMessage For="@(() => RegisterModel.Password)" />
             </div>
             <div class="form-group">
-                <label for="password">Confirm Password</label>
-                <InputText Id="password" type="password" class="form-control" @bind-Value="RegisterModel.ConfirmPassword" />
+                <label for="password_confirm">Confirm Password</label>
+                <InputText Id="password_confirm" type="password" class="form-control" @bind-Value="RegisterModel.ConfirmPassword" />
                 <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -41,27 +41,30 @@
     </div>
 </div>
 
+@if (Messages != null)
+{
+    <div class="alert alert-primary" role="alert">
+       @foreach(var message in Messages)
+        {
+            <p>@message</p>
+        }
+    </div>
+}
+
 @code {
 
     private RegisterModel RegisterModel = new RegisterModel();
-    private bool ShowErrors;
+
     private IEnumerable<string> Errors;
+    private IEnumerable<string> Messages;
 
     private async System.Threading.Tasks.Task HandleRegistration()
     {
-        ShowErrors = false;
-
         var result = await AuthService.RegisterAsync(RegisterModel);
 
         if (result.Successful)
-        {
-            NavigationManager.NavigateTo("/login");
-        }
+            Messages = result.Messages;
         else
-        {
             Errors = result.Errors;
-            ShowErrors = true;
-        }
     }
-
 }
