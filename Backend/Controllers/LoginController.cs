@@ -32,14 +32,18 @@ namespace PortableManager.Web.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginModel login)
         {
-            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
-            if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
-
+            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, true);
+            if (result.IsLockedOut)
+                return BadRequest(new LoginResult { Successful = false, Error = "You are locked. You can reset your password. Click on \"Забыл пароль\" " });
+            if (!result.Succeeded) 
+                return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+            
             var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
                 return BadRequest(new LoginResult { Successful = false, Error = "Email isn't confirmated" });
             }
+
 
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
