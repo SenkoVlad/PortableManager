@@ -95,10 +95,10 @@ namespace PortableManager.Web.Server.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
-                return Ok(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Пользователь с таким email не существует" } });
+                return BadRequest(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Пользователь с таким email не существует" } });
 
             if (!(await _userManager.IsEmailConfirmedAsync(user)))
-                return Ok(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Email не подтвержден" } });
+                return BadRequest(new ForgotPasswordResult { ShowForm = true, ShowMessages = true, Messages = new string[] { "Email не подтвержден" } });
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = $"https://localhost:5001/resetpassword?userId={user.Id}&token={token}&email={user.Email}";
@@ -117,19 +117,24 @@ namespace PortableManager.Web.Server.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null || user.Id != model.UserId)
-                return Ok(new ResetPasswordResult {  ShowMessages = true, Messages = new string[] { "Неверный email" } });
+                return Ok(new ResetPasswordResult { Status = false,  Messages = new string[] { "Неверный email" } });
            
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
             
             if (result.Succeeded)
-                return Ok(new ResetPasswordResult {  ShowMessages = true, Messages = new string[] { "Пароль успешно сброшен" } });
+            {
+                if (await _userManager.IsLockedOutAsync(user))
+                    await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+
+                return Ok(new ResetPasswordResult { Status = true,  Messages = new string[] { "Пароль успешно сброшен" } });
+            }
             else
             {
                 List<string> Errors = new List<string>();
                 foreach (var error in result.Errors)
                     Errors.Add(error.Description);
 
-                return Ok(new ResetPasswordResult {  ShowMessages = true, Messages = Errors });
+                return Ok(new ResetPasswordResult { Status = false,  Messages = Errors });
             }
         }
     }

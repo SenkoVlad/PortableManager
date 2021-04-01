@@ -27,10 +27,19 @@ namespace PortableManager.Web.Server.Data
                 },
                 ServiceLifetime.Transient);
 
-            services.AddDefaultIdentity<User>()
-                    .AddDefaultTokenProviders()
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<User, IdentityRole>(option =>
+            {
+                option.Password.RequiredLength = 9;
+                option.Password.RequiredUniqueChars = 3;
+
+                option.SignIn.RequireConfirmedAccount = true;
+
+                option.Lockout.MaxFailedAccessAttempts = 5;
+                option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            })
+            .AddDefaultTokenProviders()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>();
                     
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
