@@ -48,15 +48,15 @@ namespace PortableManager.Web.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "628bb844-ea83-4661-bce1-57006b433a07",
-                            ConcurrencyStamp = "f3d5bcce-80e1-44ba-95a0-983d9ddd28f9",
+                            Id = "8662fe5c-f0c1-44b7-974e-ab312480fd1a",
+                            ConcurrencyStamp = "ecf16f8a-d696-4361-8a67-1b5ce5dd49b1",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "ef1ecdf8-5dd4-43c3-a4c8-d065cb43c745",
-                            ConcurrencyStamp = "c346e877-8705-4b53-ab32-a6d8f9d06bb7",
+                            Id = "a41b9c16-8efe-40ae-ab7b-d9789d738b83",
+                            ConcurrencyStamp = "d36e8bfa-6862-4773-aca6-bfe8e064dc99",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -113,12 +113,10 @@ namespace PortableManager.Web.Server.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -155,12 +153,10 @@ namespace PortableManager.Web.Server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
