@@ -2,12 +2,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using PortableManager.Web.Client.Infrastructure;
-using PortableManager.Web.Client.Pages;
 using PortableManager.Web.Client.Services;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PortableManager.Web.Client
@@ -28,7 +25,7 @@ namespace PortableManager.Web.Client
             builder.Services.AddScoped<IAuthService, AuthService>();
 
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:10001") });
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:8081") });
 
             await builder.Build().RunAsync();
         }

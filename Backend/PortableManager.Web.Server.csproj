@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>29899339-4741-40f0-81ee-ece5a4aeac16</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Frontend\Web\PortableManager.Web.Client.csproj" />
     <ProjectReference Include="..\PortableManager.Shared\PortableManager.Shared.csproj" />
   </ItemGroup>
 

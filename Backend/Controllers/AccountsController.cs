@@ -25,6 +25,7 @@ namespace PortableManager.Web.Server.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var newUser = new User { UserName = model.Email, Email = model.Email };
@@ -41,7 +42,7 @@ namespace PortableManager.Web.Server.Controllers
                 await _userManager.AddToRoleAsync(newUser, "Admin");
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = $"https://localhost:5001/login?userId={newUser.Id}&token={token}&email={newUser.Email}";
+            var callbackUrl = $"https://localhost:8080/login?userId={newUser.Id}&token={token}&email={newUser.Email}";
 
             EmailService emailService = new EmailService();
             await emailService.SendEmailAsync(model.Email, "Confirm your account",
