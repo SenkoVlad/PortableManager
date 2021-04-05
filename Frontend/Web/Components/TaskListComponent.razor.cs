@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using PortableManager.Web.Client.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace PortableManager.Web.Client.Components
     public class TaskListViewModel : ComponentBase
     {
         [Inject] HttpClient Http { get; set; }
+        [Inject] IJSRuntime jsRuntime { get; set; }
+
         [Parameter] public TaskType TaskType { get; set; }
         [Parameter] public bool RerenderTaskTypesList { get; set; }
         [Parameter] public EventCallback<bool> RerenderTaskTypesListChanged { get; set; }
@@ -42,12 +45,15 @@ namespace PortableManager.Web.Client.Components
             RerenderTaskTypesList = true;
             await RerenderTaskTypesListChanged.InvokeAsync(RerenderTaskTypesList);
             await Http.PostAsJsonAsync( "task/update/task", task);
+
+            await jsRuntime.InvokeVoidAsync("showSuccessToast", $"update task status");
         }
 
         public async Task UpdateTaskTextAsync(Models.Task task, ChangeEventArgs eventArgs)
         {
             task.Text = (string)eventArgs.Value;
             await Http.PostAsJsonAsync( "task/update/task", task);
+            await jsRuntime.InvokeVoidAsync("showSuccessToast", $"update task text");
         }
 
         public async Task MoveTaskAsync(TaskType taskType, Models.Task task)
@@ -59,6 +65,7 @@ namespace PortableManager.Web.Client.Components
             RerenderTaskTypesList = true;
             await RerenderTaskTypesListChanged.InvokeAsync(RerenderTaskTypesList);
             await Http.PostAsJsonAsync("task/update/task", task);
+            await jsRuntime.InvokeVoidAsync("showSuccessToast", $"moved task");
         }
 
         public async Task RemoveTaskAsync(Models.Task task)
@@ -69,6 +76,7 @@ namespace PortableManager.Web.Client.Components
             RerenderTaskTypesList = true;
             await RerenderTaskTypesListChanged.InvokeAsync(RerenderTaskTypesList);
             await Http.PostAsJsonAsync("task/delete/task", task);
+            await jsRuntime.InvokeVoidAsync("showSuccessToast", $"removed task");
         }
 
         public async Task AddTaskAsync()
@@ -87,6 +95,7 @@ namespace PortableManager.Web.Client.Components
                 { 
                     Tasks.Add(task);
                     await TasksChanged.InvokeAsync(Tasks);
+                    await jsRuntime.InvokeVoidAsync("showSuccessToast", $"added task");
                 }
 
                 RerenderTaskTypesList = true;

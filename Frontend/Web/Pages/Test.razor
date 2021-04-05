@@ -1,5 +1,6 @@
 ﻿@page "/test"
 @inject HttpClient Http
+@inject IJSRuntime jsRuntime
 @attribute [Authorize(Roles = "Admin,User")]
 
 <h1>Test</h1>
@@ -8,6 +9,7 @@
     <button class="btn btn-outline-primary mr-3" @onclick="() => AddTaskTypeAsync()">Add test record (TaskType)</button>
     <button class="btn btn-outline-primary mr-3" @onclick="() => DeleteTaskTypeAsync()">Delete test record (TaskType)</button>
     <button class="btn btn-outline-primary mr-3" @onclick="() => UpdateTaskTypeAsync()">Update test record (TaskType)</button>
+    <button class="btn btn-outline-danger mr-3" @onclick="() => ShowToast()">Toast</button>
 </div>
 
 <div class="row">
@@ -88,5 +90,11 @@
     private async System.Threading.Tasks.Task SendMessageAsync()
     {
         var response = await Http.GetAsync("accounts/send/email");
+    }
+
+
+    private void ShowToast()
+    {
+        jsRuntime.InvokeVoidAsync("showInfoToast", "message");
     }
 }

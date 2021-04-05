@@ -9,13 +9,14 @@
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:8080;http://localhost:7080",
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true,
-      "useSSL": true
     }
+    //,
+    //"Docker": {
+    //  "commandName": "Docker",
+    //  "launchBrowser": true,
+    //  "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+    //  "publishAllPorts": true,
+    //  "useSSL": true
+    //}
   }
 }

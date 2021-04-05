@@ -16,7 +16,7 @@ namespace PortableManager.Web.Client.Components
     public class ListTaskKindsViewModel : ComponentBase
     {
         [Inject] HttpClient Http { get; set; }
-       
+        [Inject] IJSRuntime jsRuntime { get; set; }
         [Parameter] public List<TaskType> TaskTypes { get; set; }
         [Parameter] public EventCallback<List<TaskType>> TaskTypesChanged { get; set; }
 
@@ -71,6 +71,8 @@ namespace PortableManager.Web.Client.Components
                 CurrentTaskType = newTaskType;
                 await CurrentTaskTypeChanged.InvokeAsync(CurrentTaskType);
                 inputTaskType = "";
+
+                await jsRuntime.InvokeVoidAsync("showSuccessToast", $"added new taskType {newTaskType.Name}");
             }
 
             return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
@@ -83,6 +85,8 @@ namespace PortableManager.Web.Client.Components
 
             CurrentTaskType = TaskTypes.First();
             await CurrentTaskTypeChanged.InvokeAsync(CurrentTaskType);
+
+            await jsRuntime.InvokeVoidAsync("showSuccessToast", $"deleted taskType {taskType.Name}");
         }
 
         public async Task UpdateTaskTypeAsync(ChangeEventArgs eventArgs,TaskType taskType)
@@ -99,6 +103,8 @@ namespace PortableManager.Web.Client.Components
             {
                 TaskTypes[oldTaskTypeIndex] = taskType;
                 await TaskTypesChanged.InvokeAsync(TaskTypes);
+
+                await jsRuntime.InvokeVoidAsync("showSuccessToast", $"updated taskType {taskType.Name}");
             }
 
         }

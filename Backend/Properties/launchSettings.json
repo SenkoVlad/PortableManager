@@ -2,13 +2,19 @@
   "profiles": {
     "PortableManager.Web.Server": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
-      "launchBrowser": false,
-      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "https://localhost:8081;http://localhost:9081",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "https://localhost:8081;http://localhost:9081",
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
     }
+    //,
+    //"Docker": {
+    //  "commandName": "Project",
+    //  "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+    //  "publishAllPorts": true,
+    //  "useSSL": true
+    //}
   }
 }
