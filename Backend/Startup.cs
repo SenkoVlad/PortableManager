@@ -41,7 +41,8 @@ namespace PortableManager.Web.Server
                                   });
             });
 
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
+            services.AddControllers();
             services.AddRazorPages();
 
             services.AddEfRepositories(Configuration.GetConnectionString("MSSQL_CONNETION_STRING"), Configuration);
